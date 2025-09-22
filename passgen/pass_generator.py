@@ -23,7 +23,7 @@ def main():
     Enter 7 to generate passwd mixed of: Just Regular Characters
     
     Enter 0 to specify an output file to store the generated passwords(such as: passwords.txt)
-    FYI: Password length is pre-determined(for now)
+    FYI: Password length is pre-determined
     """)
     options = "1234567"
     curr_generated_pwds = []
@@ -168,9 +168,5 @@ def pw_generator(numbers=True, chars=True, specials=True):
     print(f"GENERATED PASSWORD:   {generated_pw}")    
     return generated_pw
                 
-                
-            
-        
-    
-    
-main()
+if __name__ == "__main__":  
+    main()
