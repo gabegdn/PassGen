@@ -79,14 +79,16 @@ def main():
         user_input = input()
         if user_input == "-1":
             if out_file_specified:
-                with open(user_file, '+a') as uf:
-                    for i in curr_generated_pwds:
-                        uf.write(i+"\n")
+                write_to_file(user_file, curr_generated_pwds)
+                print(f"Your generated passwords have been written to {user_file}")
             break
         
 
                 
-         
+def write_to_file(file_name, passwords):
+    with open(file_name, '+a') as uf:
+        for i in passwords:
+            uf.write(i+"\n")    
         
     
 
