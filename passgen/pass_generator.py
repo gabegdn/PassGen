@@ -12,7 +12,7 @@ seed = random.seed(strp.microsecond)
 
 
 def main():
-    print("This is a password generator")
+    print("This is a password generator(PassGen) that can generate passwords based on your specifications!")
     print("""
     Enter 1 to generate passwd mixed of: Special Characters, Numbers, and Regular Characters
     Enter 2 to generate passwd mixed of: Numbers and Regular Characters
