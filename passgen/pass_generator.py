@@ -7,9 +7,12 @@ tday = str(datetime.today())
 format = "%Y-%m-%d %H:%M:%S.%f"
 
 strp = datetime.strptime(tday, format)
-print(strp.microsecond)
+#print(strp.microsecond)
 
-seed = random.seed(strp.microsecond)
+ts = int(strp.timestamp())
+#print(ts)
+random.seed(strp.microsecond + ts)
+print(f"SEED: {strp.microsecond + ts}")
 
 
 def main():
@@ -22,39 +25,47 @@ def main():
     Enter 5 to generate passwd mixed of: Just Numbers
     Enter 6 to generate passwd mixed of: Just Special Characters
     Enter 7 to generate passwd mixed of: Just Regular Characters
+    Enter 8 to specify a length for your password (default is random length between 8 and 32 characters)
+    Enter 9 to choose a random password from your list of generated passwords
+    
     
     Enter 0 to specify an output file to store the generated passwords(such as: passwords.txt)
-    FYI: Password length is pre-determined(for now)
     """)
-    options = "1234567"
     curr_generated_pwds = []
     user_input = input()
+    
+    length_of_pwd = 0
     
     out_file_specified = False
     
     while True:
         match user_input:
             case "1":
-                p = pw_generator(numbers=True, chars=True, specials=True)
+                p = pw_generator(numbers=True, chars=True, specials=True, pass_len=length_of_pwd)
                 curr_generated_pwds.append(p) 
             case "2":
-                p = pw_generator(numbers=True, chars=True, specials=False)
+                p = pw_generator(numbers=True, chars=True, specials=False, pass_len=length_of_pwd)
                 curr_generated_pwds.append(p) 
             case "3":
-                p = pw_generator(numbers=False, chars=True, specials=True)
+                p = pw_generator(numbers=False, chars=True, specials=True, pass_len=length_of_pwd)
                 curr_generated_pwds.append(p) 
             case "4":
-                p = pw_generator(numbers=True, chars=False, specials=True)
+                p = pw_generator(numbers=True, chars=False, specials=True, pass_len=length_of_pwd)
                 curr_generated_pwds.append(p) 
             case "5":
-                p = pw_generator(numbers=True, chars=False, specials=False)
+                p = pw_generator(numbers=True, chars=False, specials=False, pass_len=length_of_pwd)
                 curr_generated_pwds.append(p) 
             case "6":
-                p = pw_generator(numbers=False, chars=False, specials=True)
+                p = pw_generator(numbers=False, chars=False, specials=True, pass_len=length_of_pwd)
                 curr_generated_pwds.append(p) 
             case "7":
-                p = pw_generator(numbers=False, chars=True, specials=False) 
+                p = pw_generator(numbers=False, chars=True, specials=False, pass_len=length_of_pwd) 
                 curr_generated_pwds.append(p)
+            case "8":
+                length_of_pwd = int(input("Enter the number of characters you want your password to be(Enter 0 for default):\n"))
+            case "9":
+                if len(curr_generated_pwds) == 0:
+                    print("You haven't generated any passwords yet!")
             case "0":
                 out_file_specified = True
                 user_file = input("Enter the name of the file you want to output your generated passwords to:\n")
@@ -62,7 +73,11 @@ def main():
             case _:
                 print("You didn't choose an option!")
         print("Here are your Current Generated Passwords:\n")
-        print(curr_generated_pwds)
+        for i in curr_generated_pwds:
+            print(f"{i}", end="\t|\t")
+        print("\n")
+        print(f"Here is a random password from your list of generated passwords, if you're undecisive(press 8 to refresh): {random.choice(curr_generated_pwds) if len(curr_generated_pwds) > 0 else 'No passwords generated yet!'}")
+        print("\n")
         print("If you want to generate another password please select an option like before otherwise enter -1:")
         print("""
         Enter 1 to generate passwd mixed of: Special Characters, Numbers, and Regular Characters
@@ -72,12 +87,21 @@ def main():
         Enter 5 to generate passwd mixed of: Just Numbers
         Enter 6 to generate passwd mixed of: Just Special Characters
         Enter 7 to generate passwd mixed of: Just Regular Characters
+        Enter 8 to specify a length for your password (default is random length between 8 and 32 characters)
+        Enter 9 to choose a random password from your list of generated passwords
+        Enter -1 to exit the program
         
         
         Enter 0 to specify an output file to store the generated passwords(such as: passwords.txt)
-        FYI: Password length is pre-determined
         """)
         user_input = input()
+        #try:
+        #    length_of_pwd = int(input("Enter the number of characters you want your password to be (choose 0 for default settings(min length of 8)):\n"))
+        #except ValueError:
+        #    print("You didn't enter a valid number, defaulting to random length between 8 and 32 characters")
+        #    length_of_pwd = int(input())
+            
+        
         if user_input == "-1":
             if out_file_specified:
                 write_to_file(user_file, curr_generated_pwds)
@@ -85,21 +109,27 @@ def main():
             break
         
 
-                
+#WRITE TO FILE FUNCTION
+# file_name: name of the file to write to   
+# passwords: list of passwords to write to the file               
 def write_to_file(file_name, passwords):
     with open(file_name, '+a') as uf:
         for i in passwords:
             uf.write(i+"\n")    
         
     
-
-def pw_generator(numbers=True, chars=True, specials=True):
+#GENERATOR FUNCTION
+# numbers: include numbers in the password
+# chars: include regular characters in the password
+# specials: include special characters in the password
+#RETURN: generated password
+def pw_generator(numbers=True, chars=True, specials=True, pass_len=None):
     
     SPEC_CHARS = '!@#$%^&*()_-=+\\|]}[{\'";:/?.>,<`~'
     CHARS ="qwertyuioplkmjnhbgvfcdxsza"
     NUMS = "1234567890"
     
-    pw_length = random.randint(15, 27)
+    pw_length = random.randint(8, 32) if pass_len == 0 else pass_len
     generated_pw = ""
     if numbers and chars and specials:
         for i in range(pw_length):
