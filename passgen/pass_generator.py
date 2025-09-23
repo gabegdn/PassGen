@@ -1,5 +1,6 @@
 import random
 from datetime import datetime
+from sys import argv
 
 tday = str(datetime.today())
 
@@ -23,7 +24,7 @@ def main():
     Enter 7 to generate passwd mixed of: Just Regular Characters
     
     Enter 0 to specify an output file to store the generated passwords(such as: passwords.txt)
-    FYI: Password length is pre-determined
+    FYI: Password length is pre-determined(for now)
     """)
     options = "1234567"
     curr_generated_pwds = []
@@ -171,4 +172,28 @@ def pw_generator(numbers=True, chars=True, specials=True):
     return generated_pw
                 
 if __name__ == "__main__":  
-    main()
+    if len(argv) > 1 and argv[1] == "--test":
+        print("Running in test mode")
+        for i in range(10):
+            print(f"ITERATION(TEST): {i+1}")
+            print("All options enabled:")
+            pw_generator(numbers=True, chars=True, specials=True)
+            print("\n")
+            print("Two options enabled:")
+            print("No Specials:")
+            pw_generator(numbers=True, chars=True, specials=False)
+            print("No Numbers:")
+            pw_generator(numbers=False, chars=True, specials=True)
+            print("No Chars:")
+            pw_generator(numbers=True, chars=False, specials=True)
+            print("\n")
+            print("One option enabled:")
+            print("Just Numbers:")
+            pw_generator(numbers=True, chars=False, specials=False)
+            print("Just Specials:")
+            pw_generator(numbers=False, chars=False, specials=True)
+            print("Just Chars:")
+            pw_generator(numbers=False, chars=True, specials=False)
+            print("\n")
+    else:
+        main()
